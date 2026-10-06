@@ -63,7 +63,7 @@ export function LoginPage() {
       if (parsed.isUnauthorized) {
         setErrorMessage('Email atau kata sandi tidak sesuai. Pastikan akun aktif.');
       } else if (parsed.code === 'INVALID_COMPANY_EMAIL') {
-        setErrorMessage('Harus menggunakan email resmi perusahaan (@company.example).');
+        setErrorMessage('Harus menggunakan email resmi perusahaan (@dexagroup.com).');
       } else {
         setErrorMessage(parsed.message);
       }
@@ -74,10 +74,10 @@ export function LoginPage() {
 
   function handleQuickFill(role: 'employee' | 'hrd') {
     if (role === 'employee') {
-      setEmail('employee@company.example');
+      setEmail('employee@dexagroup.com');
       setPassword('Employee123!');
     } else {
-      setEmail('hrd@company.example');
+      setEmail('hrd@dexagroup.com');
       setPassword('HrdEmployee123!');
     }
   }
@@ -143,7 +143,7 @@ export function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="nama@company.example"
+                  placeholder="nama@dexagroup.com"
                   required
                   autoComplete="email"
                   className="dexa-text-input"

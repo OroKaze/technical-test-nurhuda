@@ -12,7 +12,7 @@ function profileOf(overrides: Partial<EmployeeProfile> = {}): EmployeeProfile {
     id: 'profile-1',
     userId: 'user-1',
     fullName: 'New Employee',
-    companyEmail: 'new@company.example',
+    companyEmail: 'new@dexagroup.com',
     photoUrl: null,
     position: 'QA Engineer',
     phoneNumber: null,
@@ -62,7 +62,7 @@ function createService(options: { identityDuplicate?: boolean } = {}) {
   };
 
   return {
-    service: new EmployeeManagementService(repository, identity, 'company.example'),
+    service: new EmployeeManagementService(repository, identity, 'dexagroup.com'),
     state,
   };
 }
@@ -71,14 +71,14 @@ test('creates an employee by provisioning an identity account first', async () =
   const { service, state } = createService();
   const profile = await service.createEmployee({
     fullName: 'New Employee',
-    companyEmail: 'new@company.example',
+    companyEmail: 'new@dexagroup.com',
     password: 'Password123!',
     position: 'QA Engineer',
   });
 
   assert.equal(state.identityCalls, 1);
   assert.equal(profile.userId, 'user-new');
-  assert.equal(profile.companyEmail, 'new@company.example');
+  assert.equal(profile.companyEmail, 'new@dexagroup.com');
 });
 
 test('rejects employee creation with a non-company email and skips identity provisioning', async () => {
@@ -102,7 +102,7 @@ test('rejects employee creation when the email already exists in the identity se
     () =>
       service.createEmployee({
         fullName: 'New Employee',
-        companyEmail: 'new@company.example',
+        companyEmail: 'new@dexagroup.com',
         password: 'Password123!',
         position: 'QA Engineer',
       }),
@@ -117,7 +117,7 @@ test('rejects employee creation when a profile with the email already exists', a
     () =>
       service.createEmployee({
         fullName: 'Another',
-        companyEmail: 'new@company.example',
+        companyEmail: 'new@dexagroup.com',
         password: 'Password123!',
         position: 'QA Engineer',
       }),
@@ -149,7 +149,7 @@ test('updating a missing employee throws PROFILE_NOT_FOUND', async () => {
 
 test('lists employees with pagination metadata', async () => {
   const { service, state } = createService();
-  state.profiles.push(profileOf(), profileOf({ id: 'profile-2', companyEmail: 'b@company.example' }));
+  state.profiles.push(profileOf(), profileOf({ id: 'profile-2', companyEmail: 'b@dexagroup.com' }));
   const result = await service.listEmployees({});
   assert.equal(result.meta.total, 2);
   assert.equal(result.meta.page, 1);

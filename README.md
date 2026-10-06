@@ -105,8 +105,8 @@ pnpm docker:seed
 
 | Role | Email | Password | Allowed Portals |
 |---|---|---|---|
-| **Employee** | `employee@company.example` | `Employee123!` | Employee Web (`http://localhost:3001`) |
-| **HRD** | `hrd@company.example` | `HrdEmployee123!` | HRD Web (`http://localhost:3002`) & Employee Web |
+| **Employee** | `employee@dexagroup.com` | `Employee123!` | Employee Web (`http://localhost:3001`) |
+| **HRD** | `hrd@dexagroup.com` | `HrdEmployee123!` | HRD Web (`http://localhost:3002`) & Employee Web |
 
 ---
 

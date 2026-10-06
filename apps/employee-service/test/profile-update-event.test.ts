@@ -8,7 +8,7 @@ const profile: EmployeeProfile = {
   id: 'profile-1',
   userId: 'user-1',
   fullName: 'Employee Name',
-  companyEmail: 'employee@company.example',
+  companyEmail: 'employee@dexagroup.com',
   photoUrl: null,
   position: 'Engineer',
   phoneNumber: '+628111111',

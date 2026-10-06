@@ -4,13 +4,13 @@ import { Argon2PasswordHasher } from './modules/auth/password-hasher';
 const seedUsers = [
   {
     id: '00000000-0000-0000-0000-000000000001',
-    email: 'employee@company.example',
+    email: 'employee@dexagroup.com',
     password: 'Employee123!',
     role: 'EMPLOYEE',
   },
   {
     id: '00000000-0000-0000-0000-000000000002',
-    email: 'hrd@company.example',
+    email: 'hrd@dexagroup.com',
     password: 'HrdEmployee123!',
     role: 'HRD',
   },
@@ -26,7 +26,9 @@ async function seed(): Promise<void> {
       await pool.query(
         `INSERT INTO users (id, company_email, password_hash, role, is_active)
          VALUES ($1, $2, $3, $4, TRUE)
-         ON CONFLICT (company_email) DO UPDATE SET
+         ON CONFLICT (id) DO UPDATE SET
+           company_email = EXCLUDED.company_email,
+           password_hash = EXCLUDED.password_hash,
            role = EXCLUDED.role,
            is_active = TRUE,
            updated_at = NOW()`,

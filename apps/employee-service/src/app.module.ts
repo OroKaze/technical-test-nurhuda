@@ -79,7 +79,7 @@ export { outboxRepositoryToken, profilePhotoStorageToken };
       ) => new EmployeeManagementService(
         repository,
         identity,
-        process.env.COMPANY_EMAIL_DOMAIN ?? 'dexagroup.com,company.example',
+        process.env.COMPANY_EMAIL_DOMAIN ?? 'dexagroup.com',
       ),
       inject: [PostgresAdminEmployeeRepository, identityAccountClientToken],
     },

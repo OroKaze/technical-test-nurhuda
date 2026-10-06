@@ -6,7 +6,7 @@ import type { EmployeeProfile, EmployeeProfileRepository } from '../src/modules/
 test('uses the transactional profile update boundary when available', async () => {
   const profile: EmployeeProfile = {
     id: 'profile-1', userId: 'user-1', fullName: 'Employee',
-    companyEmail: 'employee@company.example', photoUrl: null,
+    companyEmail: 'employee@dexagroup.com', photoUrl: null,
     position: 'Engineer', phoneNumber: null,
   };
   let transactionalCalls = 0;

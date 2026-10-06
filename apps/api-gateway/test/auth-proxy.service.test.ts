@@ -12,7 +12,7 @@ test('forwards login requests to identity service and returns its response', asy
     });
   });
 
-  const result = await proxy.forward('login', { email: 'employee@company.example', password: 'password' });
+  const result = await proxy.forward('login', { email: 'employee@dexagroup.com', password: 'password' });
 
   assert.deepEqual(result, { status: 200, body: { accessToken: 'token' } });
   assert.equal(calls[0]?.url, 'http://identity-service:3001/api/v1/auth/login');
@@ -25,7 +25,7 @@ test('preserves identity service error status and body', async () => {
     { status: 401, headers: { 'content-type': 'application/json' } },
   ));
 
-  const result = await proxy.forward('login', { email: 'employee@company.example', password: 'wrong' });
+  const result = await proxy.forward('login', { email: 'employee@dexagroup.com', password: 'wrong' });
 
   assert.deepEqual(result, { status: 401, body: { code: 'INVALID_CREDENTIALS' } });
 });

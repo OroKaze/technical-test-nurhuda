@@ -7,7 +7,7 @@ import type { PasswordHasher } from '../src/modules/auth/password-hasher';
 
 const user: UserAccount = {
   id: 'user-1',
-  companyEmail: 'employee@company.example',
+  companyEmail: 'employee@dexagroup.com',
   passwordHash: 'stored-hash',
   role: 'EMPLOYEE',
   isActive: true,
@@ -43,7 +43,7 @@ function createDependencies(overrides: Partial<{
   };
 
   return {
-    auth: new AuthService(repository, passwords, tokens, 'company.example'),
+    auth: new AuthService(repository, passwords, tokens, 'dexagroup.com'),
     updatedHashes,
     signedClaims,
   };
@@ -51,15 +51,15 @@ function createDependencies(overrides: Partial<{
 
 test('logs in and returns only public user fields', async () => {
   const { auth, signedClaims } = createDependencies();
-  const result = await auth.login(' EMPLOYEE@COMPANY.EXAMPLE ', 'password');
+  const result = await auth.login(' EMPLOYEE@DEXAGROUP.COM ', 'password');
 
   assert.deepEqual(result.user, {
     id: 'user-1',
-    email: 'employee@company.example',
+    email: 'employee@dexagroup.com',
     role: 'EMPLOYEE',
   });
   assert.equal(result.accessToken, 'signed-token');
-  assert.deepEqual(signedClaims, [{ sub: 'user-1', email: 'employee@company.example', role: 'EMPLOYEE' }]);
+  assert.deepEqual(signedClaims, [{ sub: 'user-1', email: 'employee@dexagroup.com', role: 'EMPLOYEE' }]);
   assert.equal('passwordHash' in result.user, false);
 });
 

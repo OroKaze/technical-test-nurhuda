@@ -33,17 +33,17 @@ function createService(overrides: { existing?: UserAccount | null } = {}) {
     },
   };
   return {
-    service: new AuthService(repository, passwords, tokens, 'company.example'),
+    service: new AuthService(repository, passwords, tokens, 'dexagroup.com'),
     created,
   };
 }
 
 test('creates an employee account with a hashed password and no hash in the response', async () => {
   const { service, created } = createService();
-  const user = await service.createUser('new@company.example', 'Password123!', 'EMPLOYEE');
+  const user = await service.createUser('new@dexagroup.com', 'Password123!', 'EMPLOYEE');
 
   assert.equal(user.id, 'user-new');
-  assert.equal(user.email, 'new@company.example');
+  assert.equal(user.email, 'new@dexagroup.com');
   assert.equal(user.role, 'EMPLOYEE');
   assert.equal(created[0]?.passwordHash, 'hashed:Password123!');
   assert.equal('passwordHash' in user, false);
@@ -61,14 +61,14 @@ test('rejects a non-company email domain', async () => {
 test('rejects a duplicate company email', async () => {
   const existing: UserAccount = {
     id: 'user-1',
-    companyEmail: 'dup@company.example',
+    companyEmail: 'dup@dexagroup.com',
     passwordHash: 'hash',
     role: 'EMPLOYEE',
     isActive: true,
   };
   const { service } = createService({ existing });
   await assert.rejects(
-    () => service.createUser('dup@company.example', 'Password123!', 'EMPLOYEE'),
+    () => service.createUser('dup@dexagroup.com', 'Password123!', 'EMPLOYEE'),
     { code: 'EMAIL_ALREADY_EXISTS' },
   );
 });

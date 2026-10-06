@@ -44,7 +44,7 @@ async function run() {
     const res = await fetch(`${BASE_URL}/api/v1/auth/login`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ email: 'employee@company.example', password: 'Employee123!' }),
+      body: JSON.stringify({ email: 'employee@dexagroup.com', password: 'Employee123!' }),
     });
     if (!res.ok) throw new Error(`Login failed with status ${res.status}`);
     const data = await res.json();
@@ -152,7 +152,7 @@ async function run() {
     const res = await fetch(`${BASE_URL}/api/v1/auth/login`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ email: 'hrd@company.example', password: 'HrdEmployee123!' }),
+      body: JSON.stringify({ email: 'hrd@dexagroup.com', password: 'HrdEmployee123!' }),
     });
     if (!res.ok) throw new Error(`HRD login failed with status ${res.status}`);
     const data = await res.json();

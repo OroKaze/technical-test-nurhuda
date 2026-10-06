@@ -9,7 +9,7 @@ async function seed(): Promise<void> {
         (id, user_id, full_name, company_email, photo_url, position, phone_number)
        VALUES
         ('00000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-000000000001',
-         'Employee Name', 'employee@company.example', NULL, 'Software Developer', '+628123456789')
+         'Employee Name', 'employee@dexagroup.com', NULL, 'Software Developer', '+628123456789')
        ON CONFLICT (user_id) DO UPDATE SET
          full_name = EXCLUDED.full_name,
          company_email = EXCLUDED.company_email,

@@ -73,7 +73,7 @@ test('validateCompanyEmail: rejects email with foreign domain', () => {
   assert.equal(gmailResult.isValid, false);
   assert.match(gmailResult.error ?? '', /@dexagroup\.com/);
 
-  const otherResult = validateCompanyEmail('budi@company.example');
+  const otherResult = validateCompanyEmail('budi@otherdomain.com');
   assert.equal(otherResult.isValid, false);
 });
 
