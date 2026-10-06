@@ -7,7 +7,7 @@ const photo = { buffer: Buffer.from('png-bytes'), mimetype: 'image/png', origina
 test('forwards the photo as multipart with the caller authorization', async () => {
   let receivedUrl = '';
   let receivedAuthorization = '';
-  let receivedPhoto: FormDataEntryValue | null = null;
+  let receivedPhoto!: FormDataEntryValue | null;
   const proxy = new PhotoProxyService('http://employee-service:3002', async (url, init) => {
     receivedUrl = String(url);
     receivedAuthorization = new Headers(init?.headers).get('authorization') ?? '';

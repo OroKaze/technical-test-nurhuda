@@ -15,3 +15,10 @@ test('rejects malformed email input', () => {
   assert.equal(isCompanyEmail('not-an-email', 'company.example'), false);
   assert.equal(isCompanyEmail('employee@company.example.evil', 'company.example'), false);
 });
+
+test('accepts emails when multiple company domains are configured', () => {
+  assert.equal(isCompanyEmail('budi@dexagroup.com', 'dexagroup.com,company.example'), true);
+  assert.equal(isCompanyEmail('budi@company.example', 'dexagroup.com,company.example'), true);
+  assert.equal(isCompanyEmail('budi@other.com', 'dexagroup.com,company.example'), false);
+});
+

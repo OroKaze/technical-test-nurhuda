@@ -9,5 +9,10 @@ export function isCompanyEmail(email: string, companyDomain: string): boolean {
   const domain = normalizedEmail.slice(separatorIndex + 1);
   if (localPart.includes(' ') || domain.includes(' ') || !domain.includes('.')) return false;
 
-  return domain === normalizedDomain;
+  const allowedDomains = normalizedDomain
+    .split(',')
+    .map((d) => d.trim().toLowerCase())
+    .filter(Boolean);
+
+  return allowedDomains.includes(domain);
 }

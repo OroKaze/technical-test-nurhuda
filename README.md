@@ -46,7 +46,7 @@ The system implements a production-ready, domain-driven microservices pattern wi
 
 ### Key Architectural Highlights
 1. **Isolated Microservice Boundaries:** Services communicate synchronously via the API Gateway and asynchronously via **RabbitMQ** using the **Transactional Outbox Pattern** to prevent dual-write anomalies.
-2. **Database Segregation:** Dedicated PostgreSQL schemas (`identity`, `employee`, `attendance`) ensure bounded context isolation. PostgreSQL is strictly internal to the Docker network.
+2. **Database Segregation:** Dedicated PostgreSQL databases (`identity_db`, `employee_db`, `attendance_db`, `integration_db`) ensure bounded context isolation. PostgreSQL is strictly internal to the Docker network.
 3. **Secure Static Serving:** Uploaded profile photos are stored in a persistent Docker volume (`employee_uploads`) and proxied through the API Gateway with strict UUID validation (`^[a-f0-9-]+\.(jpg|png|webp)$`) to prevent directory traversal attacks.
 4. **Enforced Timezone Consistency:** All attendance records and frontend displays strictly enforce `Asia/Jakarta` (WIB, UTC+7) across database transactions, service layers, and UI clocks.
 5. **Security by Default:** Passwords hashed with **Argon2id**, JWT bearer tokens with role claims (`EMPLOYEE`, `HRD`), non-root container execution (`USER app`), and role-based route guards on both Gateway and Frontend.
@@ -64,8 +64,8 @@ The system implements a production-ready, domain-driven microservices pattern wi
 | **Employee Service** | — | `3002` | Internal | Employee master profiles, phone number updates, photo storage handling |
 | **Attendance Service** | — | `3003` | Internal | Check-in / check-out idempotency, daily pair merging, monthly attendance summaries |
 | **Event Worker** | — | `3004` | Internal | Outbox publisher & RabbitMQ queue consumers for cross-service events |
-| **PostgreSQL** | — | `5432` | Internal | Relational database hosting schemas `identity`, `employee`, and `attendance` |
-| **RabbitMQ** | `15672` (Dev) | `5672` | Internal / UI | Message broker. Management UI: `http://localhost:15672` (Login: `guest` / `guest` atau `dexa` / `replace-me`) |
+| **PostgreSQL** | — | `5432` | Internal | Relational database hosting databases `identity_db`, `employee_db`, `attendance_db`, and `integration_db` |
+| **RabbitMQ** | `15672` (UI)<br>`5672` (AMQP) | `5672` | Internal / UI | Message broker. Management UI: `http://localhost:15672` (Login: `guest` / `guest` atau `dexa` / `replace-me`) |
 
 ---
 
@@ -84,7 +84,8 @@ cp .env.example .env
 
 ### 2. Build and Start All Containers
 ```bash
-docker compose up -d --build
+pnpm docker:up
+# atau: docker compose up -d --build
 ```
 > All 9 services will compile, run health checks, and start up in the background.
 
@@ -94,6 +95,11 @@ Seed the databases with initial development accounts and baseline employee data:
 pnpm docker:seed
 ```
 *Note: The seed script executes directly inside the running `identity-service` and `employee-service` containers, keeping PostgreSQL credentials safe inside the internal Docker network. The script is idempotent and safe to run multiple times.*
+
+> **Useful Docker Helper Commands:**
+> - `pnpm docker:logs` — Stream logs across all containers.
+> - `pnpm docker:ps` — Check container status and health.
+> - `pnpm docker:down` — Stop and remove containers.
 
 ### 4. Development Credentials
 
@@ -115,11 +121,11 @@ pnpm typecheck
 ```
 
 ### 2. Unit & Integration Tests
-Runs Node.js native test runners across all services (`api-gateway`, `attendance-service`, `web`):
+Runs Node.js native test runners across all services (`attendance-service`, `event-worker`, `employee-service`, `identity-service`, `api-gateway`, `web`):
 ```bash
 pnpm test
 ```
-*Result: 30/30 tests pass (including attendance daily merging logic, API error normalization, and timezone conversion).*
+*Result: 100/100 tests pass (including attendance daily merging logic, API error normalization, timezone conversion, event outbox/worker handlers, strict email validation, and UI components).*
 
 ### 3. Automated End-to-End Smoke Test
 Executes a live end-to-end operational suite against the running Docker containers:
@@ -169,10 +175,9 @@ The frontend client (`apps/web`) is built with React 19, TypeScript, and Vite, s
 │   ├── identity-service/       # Authentication, credentials, JWT & Argon2id
 │   └── web/                    # React 19 + Vite SPA (Employee & HRD portals)
 ├── docker/
-│   └── postgres/init/          # DB initialization schemas (identity, employee, attendance)
+│   └── postgres/init/          # DB initialization schemas (identity, employee, attendance, integration, outbox)
 ├── packages/
-│   ├── common/                 # Shared types, error classes, and DTOs
-│   └── rabbitmq/               # Shared RabbitMQ connection & publisher helpers
+│   └── contracts/              # Shared types, DTO contracts, and event interfaces
 ├── scripts/
 │   └── smoke-test.mjs          # End-to-end integration smoke test suite
 ├── compose.yaml                # Multi-service Docker Compose configuration

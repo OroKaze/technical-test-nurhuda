@@ -1,6 +1,11 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { api } from '../../lib/api-client';
 import { parseApiError } from '../../lib/api-error';
+import {
+  validateCompanyEmail,
+  normalizeCompanyEmail,
+  DEFAULT_COMPANY_EMAIL_DOMAIN,
+} from '../../lib/email-validation';
 import { Modal } from '../../components/Modal';
 import { Input } from '../../components/Input';
 import { PasswordInput } from '../../components/PasswordInput';
@@ -58,6 +63,13 @@ export function EmployeeFormModal({
     setError('');
   }, [employeeToEdit, isOpen]);
 
+  function handleEmailBlur() {
+    if (isEditing || !companyEmail.trim()) return;
+    if (!companyEmail.includes('@')) {
+      setCompanyEmail(`${companyEmail.trim()}@${DEFAULT_COMPANY_EMAIL_DOMAIN}`);
+    }
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError('');
@@ -65,6 +77,14 @@ export function EmployeeFormModal({
     if (fullName.trim().length < 2) {
       setError('Nama lengkap minimal 2 karakter.');
       return;
+    }
+
+    if (!isEditing) {
+      const emailValidation = validateCompanyEmail(companyEmail);
+      if (!emailValidation.isValid) {
+        setError(emailValidation.error ?? 'Email perusahaan tidak valid.');
+        return;
+      }
     }
 
     if (position.trim().length < 2) {
@@ -88,9 +108,10 @@ export function EmployeeFormModal({
         });
         showToast('success', 'Data Diperbarui', `Data karyawan ${fullName} berhasil diupdate.`);
       } else {
+        const finalEmail = normalizeCompanyEmail(companyEmail);
         await api.post('/api/v1/admin/employees', {
           fullName: fullName.trim(),
-          companyEmail: companyEmail.trim().toLowerCase(),
+          companyEmail: finalEmail,
           password,
           position: position.trim(),
           phoneNumber: phoneNumber.trim() || undefined,
@@ -105,7 +126,7 @@ export function EmployeeFormModal({
       if (parsed.code === 'EMPLOYEE_EMAIL_EXISTS' || parsed.statusCode === 409) {
         setError('Email perusahaan tersebut sudah terdaftar.');
       } else if (parsed.code === 'INVALID_COMPANY_EMAIL') {
-        setError('Email harus menggunakan domain perusahaan resmi (@company.example).');
+        setError(`Email harus menggunakan domain perusahaan resmi (@${DEFAULT_COMPANY_EMAIL_DOMAIN}).`);
       } else {
         setError(parsed.message || 'Gagal menyimpan data karyawan.');
       }
@@ -146,10 +167,15 @@ export function EmployeeFormModal({
           type="email"
           value={companyEmail}
           onChange={(e) => setCompanyEmail(e.target.value)}
-          placeholder="budi@company.example"
+          onBlur={handleEmailBlur}
+          placeholder={`budi@${DEFAULT_COMPANY_EMAIL_DOMAIN}`}
           disabled={isEditing}
           required
-          hint={isEditing ? 'Email tidak dapat diubah setelah dibuat.' : 'Gunakan domain @company.example.'}
+          hint={
+            isEditing
+              ? 'Email tidak dapat diubah setelah dibuat.'
+              : `Gunakan domain resmi @${DEFAULT_COMPANY_EMAIL_DOMAIN}.`
+          }
         />
 
         {!isEditing && (

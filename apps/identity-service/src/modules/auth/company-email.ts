@@ -14,5 +14,10 @@ export function isCompanyEmail(email: string, companyDomain: string): boolean {
     return false;
   }
 
-  return domain === normalizedDomain;
+  const allowedDomains = normalizedDomain
+    .split(',')
+    .map((d) => d.trim().toLowerCase())
+    .filter(Boolean);
+
+  return allowedDomains.includes(domain);
 }
