@@ -125,7 +125,7 @@ Runs Node.js native test runners across all services (`attendance-service`, `eve
 ```bash
 pnpm test
 ```
-*Result: 100/100 tests pass (including attendance daily merging logic, API error normalization, timezone conversion, event outbox/worker handlers, strict email validation, and UI components).*
+*Result: 104/104 tests pass (including attendance daily merging logic, API error normalization, timezone conversion, event outbox/worker handlers, strict email validation and duplicate checking, and UI components).*
 
 ### 3. Automated End-to-End Smoke Test
 Executes a live end-to-end operational suite against the running Docker containers:

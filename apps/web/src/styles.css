@@ -405,6 +405,64 @@ a {
   border-color: var(--status-danger);
 }
 
+/* Company Email Input with Domain Addon */
+.email-input-wrapper {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+}
+
+.email-prefix-input {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-right: none !important;
+  flex: 1;
+}
+
+.email-domain-addon {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 14px;
+  background: var(--bg-hover, #f1f5f9);
+  border: 1px solid var(--border-subtle, #cbd5e1);
+  border-left: none;
+  border-top-right-radius: var(--radius-md, 8px);
+  border-bottom-right-radius: var(--radius-md, 8px);
+  color: var(--brand-navy, #0f2b48);
+  font-weight: 600;
+  font-size: 13px;
+  user-select: none;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.has-error .email-prefix-input {
+  border-color: var(--status-danger);
+}
+
+.has-error .email-domain-addon {
+  border-color: var(--status-danger);
+  background: #fef2f2;
+  color: var(--status-danger);
+}
+
+.email-status-text {
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.email-status-available {
+  color: #0d9488;
+}
+
+.email-status-taken {
+  color: var(--status-danger, #ef4444);
+}
+
 /* Password Input with Toggle */
 .password-wrapper {
   position: relative;

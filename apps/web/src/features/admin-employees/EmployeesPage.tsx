@@ -192,6 +192,7 @@ export function EmployeesPage() {
         onClose={() => setIsModalOpen(false)}
         employeeToEdit={selectedEmployee}
         onSuccess={loadEmployees}
+        existingEmails={employees.map((e) => e.companyEmail)}
       />
     </div>
   );

@@ -7,6 +7,76 @@ export interface EmailValidationResult {
 }
 
 /**
+ * Extracts and cleans the username/local-part from a raw input string.
+ * Strips any @domain if accidentally typed or pasted by the user.
+ */
+export function cleanEmailUsername(raw: string): string {
+  const trimmed = raw.trim().toLowerCase();
+  if (!trimmed) return '';
+  const atIndex = trimmed.indexOf('@');
+  return atIndex >= 0 ? trimmed.slice(0, atIndex) : trimmed;
+}
+
+/**
+ * Builds the complete, normalized company email from a username and domain.
+ */
+export function buildFullCompanyEmail(
+  username: string,
+  domain: string = DEFAULT_COMPANY_EMAIL_DOMAIN,
+): string {
+  const clean = cleanEmailUsername(username);
+  if (!clean) return '';
+  return `${clean}@${domain.toLowerCase()}`;
+}
+
+/**
+ * Checks whether an email address is already in use by another employee.
+ */
+export function isEmailTaken(email: string, existingEmails: string[]): boolean {
+  const normalized = email.trim().toLowerCase();
+  if (!normalized) return false;
+  return existingEmails.some((existing) => existing.trim().toLowerCase() === normalized);
+}
+
+/**
+ * Strictly validates the username / prefix part of a company email.
+ */
+export function validateCompanyUsername(username: string): { isValid: boolean; error?: string } {
+  const clean = cleanEmailUsername(username);
+
+  if (!clean) {
+    return {
+      isValid: false,
+      error: 'Nama email perusahaan wajib diisi.',
+    };
+  }
+
+  if (clean.length < 2) {
+    return {
+      isValid: false,
+      error: 'Nama email minimal 2 karakter.',
+    };
+  }
+
+  if (clean.length > 50) {
+    return {
+      isValid: false,
+      error: 'Nama email maksimal 50 karakter.',
+    };
+  }
+
+  const localPartRegex = /^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/;
+  if (!localPartRegex.test(clean) || clean.includes('..')) {
+    return {
+      isValid: false,
+      error: 'Nama email hanya boleh berisi huruf, angka, titik, atau strip tanpa tanda hubung beruntun.',
+    };
+  }
+
+  return { isValid: true };
+}
+
+/**
  * Validates company email strictly against @dexagroup.com (or provided company domain).
  * - Enforces required format
  * - Enforces minimum 2-character local part
