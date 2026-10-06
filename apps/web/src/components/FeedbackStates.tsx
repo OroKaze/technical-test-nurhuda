@@ -1,3 +1,5 @@
+import { InboxEmptyIcon, AlertCircleIcon } from './Icons';
+
 export function LoadingState({ message = 'Memuat data...' }: { message?: string }) {
   return (
     <div className="state-box state-loading" role="status">
@@ -18,7 +20,9 @@ export function EmptyState({
 }) {
   return (
     <div className="state-box state-empty">
-      <div className="state-icon" aria-hidden="true">📭</div>
+      <div className="state-icon" aria-hidden="true">
+        <InboxEmptyIcon style={{ width: 44, height: 44, color: '#94a3b8' }} />
+      </div>
       <h3>{title}</h3>
       <p>{description}</p>
       {action && <div className="state-action">{action}</div>}
@@ -37,7 +41,9 @@ export function ErrorState({
 }) {
   return (
     <div className="state-box state-error" role="alert">
-      <div className="state-icon" aria-hidden="true">⚠️</div>
+      <div className="state-icon" aria-hidden="true">
+        <AlertCircleIcon style={{ width: 40, height: 40, color: '#dc2626' }} />
+      </div>
       <h3>{title}</h3>
       <p>{message ?? 'Gagal memuat informasi. Silakan coba kembali.'}</p>
       {onRetry && (

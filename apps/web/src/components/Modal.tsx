@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
+import { XMarkIcon } from './Icons';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -42,9 +43,10 @@ export function Modal({ isOpen, onClose, title, description, children, footer }:
             onClick={onClose}
             aria-label="Tutup modal"
           >
-            ×
+            <XMarkIcon style={{ width: 18, height: 18 }} />
           </button>
         </header>
+
 
         <div className="modal-body">{children}</div>
 

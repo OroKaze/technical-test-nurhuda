@@ -6,6 +6,7 @@ import { useToast } from '../../components/Toast';
 import { PhotoUpload } from '../employee-profile/PhotoUpload';
 import { PhoneForm } from '../employee-profile/PhoneForm';
 import { ChangePasswordModal } from '../auth/ChangePasswordModal';
+import { CalendarIcon } from '../../components/Icons';
 import {
   formatDateJakarta,
   formatTimeJakarta,
@@ -168,7 +169,9 @@ export function AttendancePage() {
               <p className="card-section-desc">Catat kehadiran harian Anda tepat waktu</p>
             </div>
             <div className="date-badge-pill">
-              <span className="date-badge-icon">📅</span>
+              <span className="date-badge-icon">
+                <CalendarIcon style={{ width: 14, height: 14 }} />
+              </span>
               <span className="date-badge-text">{formatDateJakarta(currentTime)}</span>
             </div>
           </header>

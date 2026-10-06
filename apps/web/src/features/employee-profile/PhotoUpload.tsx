@@ -3,6 +3,7 @@ import { api } from '../../lib/api-client';
 import { parseApiError } from '../../lib/api-error';
 import { Button } from '../../components/Button';
 import { useToast } from '../../components/Toast';
+import { CameraIcon } from '../../components/Icons';
 
 export interface PhotoUploadProps {
   currentPhotoUrl: string | null;
@@ -116,7 +117,8 @@ export function PhotoUpload({ currentPhotoUrl, fullName, onPhotoUpdated }: Photo
               size="sm"
               onClick={() => fileInputRef.current?.click()}
             >
-              📷 Pilih Foto Profil
+              <CameraIcon style={{ width: 14, height: 14, display: 'inline', verticalAlign: '-2px', marginRight: 6 }} />
+              Pilih Foto Profil
             </Button>
           ) : (
             <>

@@ -4,6 +4,7 @@ import { parseApiError } from '../../lib/api-error';
 import { DateRangeFilter } from '../../components/DateRangeFilter';
 import { DataTable, type Column } from '../../components/DataTable';
 import { ErrorState } from '../../components/FeedbackStates';
+import { ArrowRightInIcon, ArrowRightOutIcon } from '../../components/Icons';
 import {
   formatDateJakarta,
   formatTimeJakarta,
@@ -68,7 +69,10 @@ export function SummaryPage() {
       render: (item) => (
         <span>
           {item.checkIn ? (
-            <span className="time-badge badge-in">📥 {formatTimeJakarta(item.checkIn)}</span>
+            <span className="time-badge badge-in">
+              <ArrowRightInIcon style={{ width: 13, height: 13, display: 'inline', verticalAlign: '-2px', marginRight: 4 }} />
+              {formatTimeJakarta(item.checkIn)} WIB
+            </span>
           ) : (
             <span className="text-muted">—</span>
           )}
@@ -81,7 +85,10 @@ export function SummaryPage() {
       render: (item) => (
         <span>
           {item.checkOut ? (
-            <span className="time-badge badge-out">📤 {formatTimeJakarta(item.checkOut)}</span>
+            <span className="time-badge badge-out">
+              <ArrowRightOutIcon style={{ width: 13, height: 13, display: 'inline', verticalAlign: '-2px', marginRight: 4 }} />
+              {formatTimeJakarta(item.checkOut)} WIB
+            </span>
           ) : (
             <span className="text-muted">—</span>
           )}

@@ -1,4 +1,10 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import {
+  CheckCircleIcon,
+  AlertCircleIcon,
+  InfoCircleIcon,
+  XMarkIcon,
+} from './Icons';
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning';
 
@@ -56,22 +62,37 @@ function ToastContainer({ toasts, onClose }: { toasts: ToastMessage[]; onClose: 
 
   return (
     <div className="toast-container" role="region" aria-label="Notifications" aria-live="polite">
-      {toasts.map((toast) => (
-        <div key={toast.id} className={`toast toast-${toast.type}`}>
-          <div className="toast-content">
-            <strong className="toast-title">{toast.title}</strong>
-            {toast.description && <p className="toast-desc">{toast.description}</p>}
+      {toasts.map((toast) => {
+        const icon =
+          toast.type === 'success' ? (
+            <CheckCircleIcon style={{ width: 18, height: 18, color: 'var(--status-success)', flexShrink: 0, marginTop: 1 }} />
+          ) : toast.type === 'error' ? (
+            <AlertCircleIcon style={{ width: 18, height: 18, color: 'var(--status-danger)', flexShrink: 0, marginTop: 1 }} />
+          ) : toast.type === 'warning' ? (
+            <AlertCircleIcon style={{ width: 18, height: 18, color: 'var(--status-warning)', flexShrink: 0, marginTop: 1 }} />
+          ) : (
+            <InfoCircleIcon style={{ width: 18, height: 18, color: 'var(--status-info)', flexShrink: 0, marginTop: 1 }} />
+          );
+
+        return (
+          <div key={toast.id} className={`toast toast-${toast.type}`}>
+            {icon}
+            <div className="toast-content" style={{ flex: 1 }}>
+              <strong className="toast-title">{toast.title}</strong>
+              {toast.description && <p className="toast-desc">{toast.description}</p>}
+            </div>
+            <button
+              type="button"
+              className="toast-close"
+              onClick={() => onClose(toast.id)}
+              aria-label="Tutup notifikasi"
+            >
+              <XMarkIcon style={{ width: 14, height: 14 }} />
+            </button>
           </div>
-          <button
-            type="button"
-            className="toast-close"
-            onClick={() => onClose(toast.id)}
-            aria-label="Tutup notifikasi"
-          >
-            ×
-          </button>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
+

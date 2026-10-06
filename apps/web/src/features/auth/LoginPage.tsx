@@ -4,6 +4,7 @@ import { api } from '../../lib/api-client';
 import { setAuthSession, type AuthUser } from '../../lib/auth-session';
 import { parseApiError } from '../../lib/api-error';
 import { useToast } from '../../components/Toast';
+import { AlertCircleIcon } from '../../components/Icons';
 
 const DEXA_HEADER_LOGO =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuCIgf4smg6Moot6ti7iADPQ-zipbOP3OEVbJhLIARj2C_1-2Hf7Ejj_WRi4IJc3P6F-F73ckztvhImEaL9glgTFyh281JvR3Ck0DUti4Uw5EkjfGtoGsf038Ap6ha_Wi_1CQG2KrskpQ5v8EunoemVQ9DdAere-DTaf7ceTDGIT9YY8-Z6iUHq6OtepxJ9_4g7CnR1CrrrbUMT7GXacIb-yFWG_U6AAKOcO4lyLafqE-B4ksweJA4iNRODZQ3o6zHc5ovo';
@@ -113,7 +114,7 @@ export function LoginPage() {
 
           {errorMessage && (
             <div className="alert-box alert-error" role="alert">
-              <span>⚠️</span>
+              <AlertCircleIcon style={{ width: 16, height: 16, flexShrink: 0 }} />
               <span>{errorMessage}</span>
             </div>
           )}

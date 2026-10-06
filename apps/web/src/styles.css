@@ -423,7 +423,17 @@ a {
   border: none;
   cursor: pointer;
   padding: 6px;
-  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.password-toggle:hover {
+  color: var(--brand-navy);
+  background: var(--bg-hover);
 }
 
 /* Modal Dialog */
@@ -472,10 +482,19 @@ a {
 .modal-close {
   background: none;
   border: none;
-  font-size: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: var(--radius-sm);
   color: var(--text-muted);
   cursor: pointer;
-  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.modal-close:hover {
+  background: var(--bg-hover);
+  color: var(--brand-navy);
 }
 
 .modal-body {
@@ -545,9 +564,19 @@ a {
 .toast-close {
   background: none;
   border: none;
-  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: var(--radius-sm);
   color: var(--text-muted);
   cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toast-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--brand-navy);
 }
 
 @keyframes slideInRight {

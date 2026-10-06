@@ -8,7 +8,7 @@ const DEXA_HEADER_LOGO =
 export interface NavItem {
   to: string;
   label: string;
-  icon?: string;
+  icon?: React.ReactNode;
 }
 
 interface AppShellProps {

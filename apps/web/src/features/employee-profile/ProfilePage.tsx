@@ -6,6 +6,7 @@ import { PhoneForm } from './PhoneForm';
 import { ChangePasswordModal } from '../auth/ChangePasswordModal';
 import { Button } from '../../components/Button';
 import { LoadingState, ErrorState } from '../../components/FeedbackStates';
+import { KeyIcon } from '../../components/Icons';
 
 export interface EmployeeProfileData {
   id: string;
@@ -110,7 +111,8 @@ export function ProfilePage() {
             size="sm"
             onClick={() => setIsPasswordModalOpen(true)}
           >
-            🔒 Ubah Password
+            <KeyIcon style={{ width: 14, height: 14, display: 'inline', verticalAlign: '-2px', marginRight: 6 }} />
+            Ubah Password
           </Button>
         </div>
       </section>

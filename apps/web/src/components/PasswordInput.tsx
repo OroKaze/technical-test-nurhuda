@@ -1,4 +1,5 @@
 import { forwardRef, useState, type InputHTMLAttributes } from 'react';
+import { EyeIcon, EyeSlashIcon } from './Icons';
 
 export interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -35,7 +36,11 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
           tabIndex={-1}
           aria-label={showPassword ? 'Sembunyikan password' : 'Lihat password'}
         >
-          {showPassword ? '🙈' : '👁️'}
+          {showPassword ? (
+            <EyeSlashIcon style={{ width: 18, height: 18, color: '#64748B' }} />
+          ) : (
+            <EyeIcon style={{ width: 18, height: 18, color: '#64748B' }} />
+          )}
         </button>
       </div>
       {error && <span className="field-error" role="alert">{error}</span>}
@@ -43,3 +48,4 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
     </div>
   );
 });
+

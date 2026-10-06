@@ -9,18 +9,45 @@ import { ProfilePage } from '../features/employee-profile/ProfilePage';
 import { EmployeesPage } from '../features/admin-employees/EmployeesPage';
 import { AttendanceMonitorPage } from '../features/admin-attendance/AttendanceMonitorPage';
 import { useNotificationListener } from '../features/notifications/useNotificationListener';
+import {
+  ClockIcon,
+  ChartBarIcon,
+  UserIcon,
+  UsersIcon,
+  ClipboardCheckIcon,
+} from '../components/Icons';
 
 const mode = import.meta.env.VITE_APP_MODE === 'hrd' ? 'hrd' : 'employee';
 
 const employeeNavItems = [
-  { to: '/employee/attendance', label: 'Absensi Hari Ini', icon: '⏱️' },
-  { to: '/employee/attendance-summary', label: 'Ringkasan Absensi', icon: '📊' },
-  { to: '/employee/profile', label: 'Profil Saya', icon: '👤' },
+  {
+    to: '/employee/attendance',
+    label: 'Absensi Hari Ini',
+    icon: <ClockIcon style={{ width: 16, height: 16 }} />,
+  },
+  {
+    to: '/employee/attendance-summary',
+    label: 'Ringkasan Absensi',
+    icon: <ChartBarIcon style={{ width: 16, height: 16 }} />,
+  },
+  {
+    to: '/employee/profile',
+    label: 'Profil Saya',
+    icon: <UserIcon style={{ width: 16, height: 16 }} />,
+  },
 ];
 
 const hrdNavItems = [
-  { to: '/admin/employees', label: 'Manajemen Karyawan', icon: '👥' },
-  { to: '/admin/attendance', label: 'Monitoring Absensi', icon: '📋' },
+  {
+    to: '/admin/employees',
+    label: 'Manajemen Karyawan',
+    icon: <UsersIcon style={{ width: 16, height: 16 }} />,
+  },
+  {
+    to: '/admin/attendance',
+    label: 'Monitoring Absensi',
+    icon: <ClipboardCheckIcon style={{ width: 16, height: 16 }} />,
+  },
 ];
 
 function EmployeeLayout({ title, children }: { title: string; children: React.ReactNode }) {

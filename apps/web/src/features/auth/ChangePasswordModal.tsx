@@ -5,6 +5,7 @@ import { Modal } from '../../components/Modal';
 import { PasswordInput } from '../../components/PasswordInput';
 import { Button } from '../../components/Button';
 import { useToast } from '../../components/Toast';
+import { AlertCircleIcon } from '../../components/Icons';
 
 export interface ChangePasswordModalProps {
   isOpen: boolean;
@@ -75,7 +76,7 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
     >
       {error && (
         <div className="alert-box alert-error" role="alert">
-          <span>⚠️</span>
+          <AlertCircleIcon style={{ width: 16, height: 16, flexShrink: 0 }} />
           <span>{error}</span>
         </div>
       )}
