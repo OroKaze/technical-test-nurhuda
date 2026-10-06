@@ -6,10 +6,11 @@ import { useToast } from '../../components/Toast';
 import { PhotoUpload } from '../employee-profile/PhotoUpload';
 import { PhoneForm } from '../employee-profile/PhoneForm';
 import { ChangePasswordModal } from '../auth/ChangePasswordModal';
-import { CalendarIcon } from '../../components/Icons';
+import { CalendarIcon, ClockIcon } from '../../components/Icons';
 import {
   formatDateJakarta,
   formatTimeJakarta,
+  parseAttendanceDateTimeJakarta,
   getTodayJakarta,
   getFirstDayOfCurrentMonthJakarta,
 } from '../../lib/datetime';
@@ -320,41 +321,60 @@ export function AttendancePage() {
             </button>
           </form>
 
-          {/* Tabel Riwayat Presensi (4 Kolom Sesuai Spek) */}
+          {/* Tabel Riwayat Presensi (3 Kolom: Masuk, Pulang, Status Kehadiran) */}
           <div className="table-wrapper-dexa">
             <table className="table-dexa">
               <thead>
                 <tr>
-                  <th scope="col">TANGGAL</th>
-                  <th scope="col">WAKTU CHECK-IN</th>
-                  <th scope="col">WAKTU CHECK-OUT</th>
-                  <th scope="col">STATUS KEHADIRAN</th>
+                  <th scope="col">Masuk</th>
+                  <th scope="col">Pulang</th>
+                  <th scope="col">Status Kehadiran</th>
                 </tr>
               </thead>
               <tbody>
                 {summaryLoading ? (
                   <tr>
-                    <td colSpan={4} className="table-empty-cell">Memuat riwayat kehadiran...</td>
+                    <td colSpan={3} className="table-empty-cell">Memuat riwayat kehadiran...</td>
                   </tr>
                 ) : summaryList.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="table-empty-cell">Tidak ada catatan absensi pada periode ini.</td>
+                    <td colSpan={3} className="table-empty-cell">Tidak ada catatan absensi pada periode ini.</td>
                   </tr>
                 ) : (
                   summaryList.map((item) => {
                     const isComplete = Boolean(item.checkIn && item.checkOut);
                     const isInOnly = Boolean(item.checkIn && !item.checkOut);
 
+                    const checkInParsed = parseAttendanceDateTimeJakarta(item.checkIn, item.date);
+                    const checkOutParsed = parseAttendanceDateTimeJakarta(item.checkOut, item.date);
+
                     return (
                       <tr key={item.date}>
-                        <td className="font-semibold text-slate-900">
-                          {formatDateJakarta(item.date)}
+                        <td>
+                          {checkInParsed ? (
+                            <div className="attendance-datetime-block">
+                              <span className="attendance-date-val">{checkInParsed.date}</span>
+                              <span className="attendance-time-pill" title={`Waktu Masuk: ${checkInParsed.time} WIB`}>
+                                <ClockIcon className="time-icon" />
+                                <span>{checkInParsed.time}</span>
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="attendance-empty-val">-- : --</span>
+                          )}
                         </td>
-                        <td className="font-mono">
-                          {item.checkIn ? `${formatTimeJakarta(item.checkIn)} WIB` : <span className="text-muted">—</span>}
-                        </td>
-                        <td className="font-mono">
-                          {item.checkOut ? `${formatTimeJakarta(item.checkOut)} WIB` : <span className="text-muted">-- : --</span>}
+                        <td>
+                          {checkOutParsed ? (
+                            <div className="attendance-datetime-block">
+                              <span className="attendance-date-val">{checkOutParsed.date}</span>
+                              <span className="attendance-time-pill" title={`Waktu Pulang: ${checkOutParsed.time} WIB`}>
+                                <ClockIcon className="time-icon" />
+                                <span>{checkOutParsed.time}</span>
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="attendance-empty-val">-- : --</span>
+                          )}
                         </td>
                         <td>
                           {isComplete ? (

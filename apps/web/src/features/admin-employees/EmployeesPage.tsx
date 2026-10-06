@@ -3,6 +3,7 @@ import { api } from '../../lib/api-client';
 import { parseApiError } from '../../lib/api-error';
 import { EmployeeFormModal, type EmployeeData } from './EmployeeFormModal';
 import { ErrorState } from '../../components/FeedbackStates';
+import { UserPlusIcon, SearchIcon } from '../../components/Icons';
 
 interface AdminEmployeesResponse {
   data: EmployeeData[];
@@ -75,10 +76,8 @@ export function EmployeesPage() {
             onClick={handleOpenCreate}
             className="btn-add-employee-dexa"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ width: 16, height: 16 }}>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-            </svg>
-            <span>+ Tambah Karyawan Baru</span>
+            <UserPlusIcon style={{ width: 18, height: 18 }} />
+            <span>Tambah Karyawan Baru</span>
           </button>
         </header>
 
@@ -86,9 +85,7 @@ export function EmployeesPage() {
         <div className="search-toolbar-dexa">
           <div className="search-input-wrapper">
             <span className="search-icon-left">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ width: 16, height: 16 }}>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+              <SearchIcon style={{ width: 16, height: 16 }} />
             </span>
             <input
               type="text"

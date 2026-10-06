@@ -22,7 +22,7 @@ export class EmployeeProfileService {
   async updateOwnProfile(
     userId: string,
     changes: { phoneNumber?: string | null; photoUrl?: string | null },
-    correlationId = crypto.randomUUID(),
+    correlationId: string = crypto.randomUUID(),
   ): Promise<EmployeeProfile> {
     const existingProfile = await this.profiles.findByUserId(userId);
     if (!existingProfile) {

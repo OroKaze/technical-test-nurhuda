@@ -28,6 +28,9 @@
   --dexa-red: #b91c1c;
   --dexa-red-hover: #991b1b;
   --dexa-red-light: #fef2f2;
+  --dexa-navy: #071d3b;
+  --dexa-navy-hover: #030e1d;
+  --dexa-navy-light: #e8f0fe;
 }
 
 *, *::before, *::after {
@@ -564,6 +567,129 @@ a {
   justify-content: flex-end;
   gap: 12px;
   margin-top: 20px;
+}
+
+/* Password Strength Meter & Requirements UX */
+.password-strength-container {
+  margin-top: -6px;
+  margin-bottom: 14px;
+}
+
+.password-strength-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.password-strength-label {
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.password-strength-value {
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.password-strength-bars {
+  display: flex;
+  gap: 5px;
+  height: 5px;
+  margin-bottom: 10px;
+}
+
+.password-strength-bar {
+  flex: 1;
+  height: 100%;
+  background: #e2e8f0;
+  border-radius: 9999px;
+  transition: background-color 0.25s ease;
+}
+
+.password-requirements-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 6px;
+}
+
+.password-requirements-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 8px;
+}
+
+.password-requirements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.password-req-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.password-req-item.is-met {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.password-req-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-req-icon.is-met {
+  color: #10b981;
+}
+
+.password-req-icon.is-unmet {
+  color: #cbd5e1;
+}
+
+.password-match-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  margin-top: -6px;
+  margin-bottom: 14px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.password-match-status.is-matching {
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+.password-match-status.is-mismatch {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
 }
 
 @keyframes fadeIn {
@@ -1932,6 +2058,66 @@ a {
   font-size: 13px;
 }
 
+/* Attendance Date & Time Visual Separation UX */
+.attendance-datetime-block {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+}
+
+.attendance-date-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.attendance-time-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4.5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #334155;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 2px 7px;
+  border-radius: 6px;
+  line-height: 1.2;
+  transition: all 0.15s ease;
+}
+
+.attendance-time-pill:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.attendance-time-pill .time-icon {
+  width: 12px;
+  height: 12px;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.attendance-empty-val {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: #94a3b8;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  padding: 3px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+}
+
 /* Badge Dexa System */
 .badge-dexa {
   display: inline-flex;
@@ -2091,7 +2277,7 @@ a {
 .btn-add-employee-dexa {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 8px 16px;
   background: var(--dexa-red);
   color: #ffffff;
@@ -2102,6 +2288,10 @@ a {
   cursor: pointer;
   transition: all 0.15s ease-in-out;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-add-employee-dexa svg {
+  flex-shrink: 0;
 }
 
 .btn-add-employee-dexa:hover {
@@ -2191,61 +2381,85 @@ a {
   font-weight: 500;
 }
 
-/* Attendance Monitor Filter Toolbar */
-.attendance-filter-toolbar-dexa {
-  background: #f8fafc;
+/* Attendance Monitor Filter Toolbars */
+.attendance-filter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.attendance-date-toolbar-dexa {
+  background: #ffffff;
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  padding: 14px;
+  padding: 14px 16px;
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin: 18px 0;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.toolbar-title-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brand-navy);
 }
 
 .toolbar-fields-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
-  align-items: flex-end;
+  gap: 12px;
+  align-items: center;
 }
 
 .toolbar-field {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 8px;
 }
 
 .toolbar-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
 }
 
-.toolbar-input,
-.toolbar-select {
-  padding: 8px 12px;
+.toolbar-input {
+  padding: 7px 12px;
   font-size: 12px;
-  background: #ffffff;
+  font-weight: 500;
+  background: #f8fafc;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   color: #0f172a;
   outline: none;
+  transition: all 0.15s ease-in-out;
 }
 
-.toolbar-input:focus,
-.toolbar-select:focus {
+.toolbar-input:focus {
+  background: #ffffff;
   border-color: var(--dexa-navy);
+  box-shadow: 0 0 0 2px rgba(7, 29, 59, 0.1);
+}
+
+.toolbar-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-apply-filter-dexa {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 36px;
-  padding: 0 18px;
+  height: 34px;
+  padding: 0 16px;
   background: var(--dexa-navy);
   color: #ffffff;
   font-size: 12px;
@@ -2253,9 +2467,183 @@ a {
   border-radius: 6px;
   border: none;
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
   transition: all 0.15s ease-in-out;
 }
 
-.btn-apply-filter-dexa:hover {
-  background: #071526;
+.btn-apply-filter-dexa:hover:not(:disabled) {
+  background: var(--dexa-navy-hover);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+.btn-reset-filter-dexa {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-reset-filter-dexa:hover:not(:disabled) {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* Second Toolbar: Live Instant Search & Status Tabs */
+.attendance-search-toolbar-dexa {
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.search-field-container {
+  position: relative;
+  flex: 1;
+  min-width: 280px;
+  max-width: 480px;
+}
+
+.search-field-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  display: flex;
+  pointer-events: none;
+}
+
+.search-field-input {
+  width: 100%;
+  padding: 8px 36px 8px 36px;
+  font-size: 13px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  color: #0f172a;
+  outline: none;
+  transition: all 0.15s ease-in-out;
+}
+
+.search-field-input:focus {
+  border-color: var(--dexa-navy);
+  box-shadow: 0 0 0 2px rgba(7, 29, 59, 0.1);
+}
+
+.search-field-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #e2e8f0;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.search-field-clear:hover {
+  background: #cbd5e1;
+  color: #0f172a;
+}
+
+.status-filter-pills {
+  display: inline-flex;
+  align-items: center;
+  background: #e2e8f0;
+  padding: 3px;
+  border-radius: 6px;
+  gap: 3px;
+}
+
+.status-pill-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-pill-btn:hover {
+  color: #0f172a;
+}
+
+.status-pill-btn.is-active {
+  background: #ffffff;
+  color: var(--brand-navy);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.pill-count {
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.status-pill-btn.is-active .pill-count {
+  background: var(--dexa-navy-light);
+  color: var(--brand-navy);
+}
+
+.filter-results-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+  font-size: 12px;
+  color: #64748b;
+  margin-top: -6px;
+  margin-bottom: 8px;
+}
+
+.filter-keyword-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--dexa-navy-light);
+  color: var(--brand-navy);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.filter-keyword-badge button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  padding: 0;
+  display: flex;
+  align-items: center;
 }

@@ -40,9 +40,39 @@ test('rejects unsupported MIME types', async () => {
 test('rejects files larger than the configured limit', async () => {
   const root = await mkdtemp(join(tmpdir(), 'dexa-photo-'));
   try {
-    const storage = new ProfilePhotoStorage(root, 4);
+    const storage = new ProfilePhotoStorage(root, 2 * 1024 * 1024);
+    const oversized = Buffer.alloc(2 * 1024 * 1024 + 1);
+    oversized[0] = 0xff;
+    oversized[1] = 0xd8;
+    oversized[2] = 0xff;
     await assert.rejects(
-      () => storage.store({ mimetype: 'image/jpeg', originalname: 'avatar.jpg', size: 5, buffer: Buffer.from('12345') }),
+      () => storage.store({ mimetype: 'image/jpeg', originalname: 'avatar.jpg', size: oversized.length, buffer: oversized }),
+      InvalidProfilePhotoError,
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test('rejects empty photo files', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'dexa-photo-'));
+  try {
+    const storage = new ProfilePhotoStorage(root);
+    await assert.rejects(
+      () => storage.store({ mimetype: 'image/png', originalname: 'avatar.png', size: 0, buffer: Buffer.alloc(0) }),
+      InvalidProfilePhotoError,
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test('rejects mismatched file extension', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'dexa-photo-'));
+  try {
+    const storage = new ProfilePhotoStorage(root);
+    await assert.rejects(
+      () => storage.store({ mimetype: 'image/png', originalname: 'avatar.php', size: 4, buffer: Buffer.from('PNG!') }),
       InvalidProfilePhotoError,
     );
   } finally {

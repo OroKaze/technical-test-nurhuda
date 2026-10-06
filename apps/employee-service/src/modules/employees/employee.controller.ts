@@ -38,7 +38,18 @@ export class EmployeeController {
   }
 
   @Post('photo')
-  @UseInterceptors(FileInterceptor('photo', { limits: { fileSize: 5 * 1024 * 1024 } }))
+  @UseInterceptors(
+    FileInterceptor('photo', {
+      limits: { fileSize: 2 * 1024 * 1024 },
+      fileFilter: (_req, file, cb) => {
+        const allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!allowedMimes.includes(file.mimetype)) {
+          return cb(new BadRequestException('Only JPEG, PNG, and WebP images are accepted'), false);
+        }
+        cb(null, true);
+      },
+    }),
+  )
   async updatePhoto(@Req() request: AuthenticatedRequest, @UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException('Profile photo is required');
     const stored = await this.photos.store({

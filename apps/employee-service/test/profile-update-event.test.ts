@@ -21,7 +21,9 @@ test('profile update emits sanitized employee.profile.updated outbox event', asy
     updateSelfProfile: async () => ({ ...profile, phoneNumber: '+628222222' }),
   };
   const outbox: OutboxRepository = {
-    insert: async (_client, event) => events.push(event as unknown as Record<string, unknown>),
+    insert: async (_client, event) => {
+      events.push(event as unknown as Record<string, unknown>);
+    },
   };
   const service = new EmployeeProfileService(profiles, outbox);
 

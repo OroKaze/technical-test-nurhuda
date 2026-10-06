@@ -47,7 +47,7 @@ The system implements a production-ready, domain-driven microservices pattern wi
 ### Key Architectural Highlights
 1. **Isolated Microservice Boundaries:** Services communicate synchronously via the API Gateway and asynchronously via **RabbitMQ** using the **Transactional Outbox Pattern** to prevent dual-write anomalies.
 2. **Database Segregation:** Dedicated PostgreSQL databases (`identity_db`, `employee_db`, `attendance_db`, `integration_db`) ensure bounded context isolation. PostgreSQL is strictly internal to the Docker network.
-3. **Secure Static Serving:** Uploaded profile photos are stored in a persistent Docker volume (`employee_uploads`) and proxied through the API Gateway with strict UUID validation (`^[a-f0-9-]+\.(jpg|png|webp)$`) to prevent directory traversal attacks.
+3. **Secure Static Serving:** Uploaded profile photos are stored in a persistent Docker volume (`employee_uploads`) and proxied through the API Gateway with strict UUID validation (`^[a-f0-9-]+\.(jpg|png|webp)$`) to prevent directory traversal attacks. In addition, uploaded photos undergo multi-layer validation: max size 2 MB, magic-byte binary signature inspection (JPEG, PNG, WebP), and filename extension verification to prevent MIME type spoofing.
 4. **Enforced Timezone Consistency:** All attendance records and frontend displays strictly enforce `Asia/Jakarta` (WIB, UTC+7) across database transactions, service layers, and UI clocks.
 5. **Security by Default:** Passwords hashed with **Argon2id**, JWT bearer tokens with role claims (`EMPLOYEE`, `HRD`), non-root container execution (`USER app`), and role-based route guards on both Gateway and Frontend.
 
@@ -64,7 +64,7 @@ The system implements a production-ready, domain-driven microservices pattern wi
 | **Employee Service** | — | `3002` | Internal | Employee master profiles, phone number updates, photo storage handling |
 | **Attendance Service** | — | `3003` | Internal | Check-in / check-out idempotency, daily pair merging, monthly attendance summaries |
 | **Event Worker** | — | `3004` | Internal | Outbox publisher & RabbitMQ queue consumers for cross-service events |
-| **PostgreSQL** | — | `5432` | Internal | Relational database hosting databases `identity_db`, `employee_db`, `attendance_db`, and `integration_db` |
+| **PostgreSQL** | `5435` | `5432` | Internal / Local Debug | Relational database hosting databases `identity_db`, `employee_db`, `attendance_db`, and `integration_db` |
 | **RabbitMQ** | `15672` (UI)<br>`5672` (AMQP) | `5672` | Internal / UI | Message broker. Management UI: `http://localhost:15672` (Login: `guest` / `guest` atau `dexa` / `replace-me`) |
 
 ---
@@ -125,7 +125,7 @@ Runs Node.js native test runners across all services (`attendance-service`, `eve
 ```bash
 pnpm test
 ```
-*Result: 104/104 tests pass (including attendance daily merging logic, API error normalization, timezone conversion, event outbox/worker handlers, strict email validation and duplicate checking, and UI components).*
+*Result: 106/106 tests pass (including attendance daily merging logic, API error normalization, timezone conversion, event outbox/worker handlers, strict email validation and duplicate checking, photo storage security & signature validation, and UI components).*
 
 ### 3. Automated End-to-End Smoke Test
 Executes a live end-to-end operational suite against the running Docker containers:
@@ -152,14 +152,18 @@ The frontend client (`apps/web`) is built with React 19, TypeScript, and Vite, s
 ### Employee Portal (`http://localhost:3001`)
 - **Live Digital Clock:** Real-time WIB clock displaying current date and time.
 - **Attendance Actions:** Check-In and Check-Out buttons with instant confirmation and error banners.
-- **Attendance Summary:** Date-filtered summary table (`from` / `to`) displaying paired Check-In & Check-Out times, duration, and status tags.
-- **Profile & Photo Upload:** Profile card with avatar image preview, phone number editor, and client-side validated photo uploader (PNG/JPG/WEBP, max 5MB).
+- **Attendance Summary:** Date-filtered summary table (`from` / `to`) displaying paired Check-In & Check-Out date and time badges in Jakarta timezone (`YYYY-MM-DD HH:mm`), duration, and status tags.
+- **Profile & Photo Upload:** Profile card with avatar image preview, phone number editor, and client-side validated photo uploader (PNG/JPG/WEBP, max 2MB).
 - **Password Management:** Self-service modal to update user password with new credentials.
 - **Real-Time Notifications:** Server-Sent Events (SSE) listener with non-intrusive toast popups.
 
 ### HRD Portal (`http://localhost:3002`)
 - **Employee Master Management:** Full CRUD interface for employees with search, pagination, and modal dialogs to register new personnel or modify existing profiles.
-- **Attendance Monitoring:** Read-only company-wide attendance monitoring log with employee and date filtering.
+- **Attendance Monitoring:** Read-only company-wide attendance monitoring log featuring dual-toolbar controls:
+  - **Date Range Query:** Filter by `from` and `to` business dates with quick reset.
+  - **Real-Time Instant Search:** Filter records instantly by employee name, employee ID, or email.
+  - **Status Filter Pills:** Toggle views by status (`Semua`, `Hadir Lengkap`, `Belum Pulang`) with dynamic counter badges.
+  - **Formatted Badges:** Distinct Jakarta date and pill time badges with visual indicators for missing checkout times.
 - **Role Guarding:** Strictly restricts access to HRD role users; unauthorized access redirects automatically.
 
 ---

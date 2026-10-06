@@ -12,7 +12,8 @@ export interface PhotoUploadProps {
 }
 
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
+const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
+const MAX_BYTES = 2 * 1024 * 1024; // 2 MB
 
 export function PhotoUpload({ currentPhotoUrl, fullName, onPhotoUpdated }: PhotoUploadProps) {
   const { showToast } = useToast();
@@ -28,13 +29,22 @@ export function PhotoUpload({ currentPhotoUrl, fullName, onPhotoUpdated }: Photo
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-      setError('Hanya format JPEG, PNG, dan WebP yang didukung.');
+    if (file.size <= 0) {
+      setError('File foto tidak boleh kosong.');
+      if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
 
     if (file.size > MAX_BYTES) {
-      setError('Ukuran file maksimal 5 MB.');
+      setError('Ukuran file melebihi batas maksimal 2 MB.');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      return;
+    }
+
+    const fileExt = file.name.split('.').pop()?.toLowerCase() ?? '';
+    if (!ALLOWED_EXTENSIONS.includes(fileExt) || !ALLOWED_MIME_TYPES.includes(file.type)) {
+      setError('Format file tidak valid. Hanya file JPEG, PNG, dan WebP yang diizinkan.');
+      if (fileInputRef.current) fileInputRef.current.value = '';
       return;
     }
 
@@ -144,7 +154,7 @@ export function PhotoUpload({ currentPhotoUrl, fullName, onPhotoUpdated }: Photo
           )}
         </div>
 
-        <p className="photo-hint">Format: JPEG, PNG, WebP. Maksimal 5 MB.</p>
+        <p className="photo-hint">Format yang didukung: JPEG, PNG, WebP. Maksimal 2 MB.</p>
         {error && <p className="field-error" role="alert">{error}</p>}
       </div>
     </div>
