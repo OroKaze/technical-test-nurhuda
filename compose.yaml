@@ -1,0 +1,171 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    networks: [dexa-platform]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks: [dexa-platform]
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_port_connectivity"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  identity-service:
+    build:
+      context: .
+      dockerfile: apps/identity-service/Dockerfile
+    env_file: [.env]
+    environment:
+      PORT: ${IDENTITY_SERVICE_PORT}
+      IDENTITY_DATABASE_URL: ${IDENTITY_DATABASE_URL}
+      COMPANY_EMAIL_DOMAIN: ${COMPANY_EMAIL_DOMAIN}
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [dexa-platform]
+
+  employee-service:
+    build:
+      context: .
+      dockerfile: apps/employee-service/Dockerfile
+    env_file: [.env]
+    environment:
+      PORT: ${EMPLOYEE_SERVICE_PORT}
+      EMPLOYEE_DATABASE_URL: ${EMPLOYEE_DATABASE_URL}
+      IDENTITY_SERVICE_URL: http://identity-service:${IDENTITY_SERVICE_PORT}
+      COMPANY_EMAIL_DOMAIN: ${COMPANY_EMAIL_DOMAIN}
+      JWT_SECRET: ${JWT_SECRET}
+    volumes:
+      - employee_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
+    networks: [dexa-platform]
+
+  attendance-service:
+    build:
+      context: .
+      dockerfile: apps/attendance-service/Dockerfile
+    env_file: [.env]
+    environment:
+      PORT: ${ATTENDANCE_SERVICE_PORT}
+      ATTENDANCE_DATABASE_URL: ${ATTENDANCE_DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      BUSINESS_TIMEZONE: ${BUSINESS_TIMEZONE}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
+    networks: [dexa-platform]
+
+  event-worker:
+    build:
+      context: .
+      dockerfile: apps/event-worker/Dockerfile
+    env_file: [.env]
+    environment:
+      PORT: ${EVENT_WORKER_PORT}
+      INTEGRATION_DATABASE_URL: ${INTEGRATION_DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      NOTIFICATION_PROVIDER: ${NOTIFICATION_PROVIDER}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      RABBITMQ_VHOST: ${RABBITMQ_VHOST}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
+    networks: [dexa-platform]
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: apps/api-gateway/Dockerfile
+    env_file: [.env]
+    environment:
+      PORT: ${API_GATEWAY_PORT}
+      IDENTITY_SERVICE_URL: http://identity-service:${IDENTITY_SERVICE_PORT}
+      EMPLOYEE_SERVICE_URL: http://employee-service:${EMPLOYEE_SERVICE_PORT}
+      ATTENDANCE_SERVICE_URL: http://attendance-service:${ATTENDANCE_SERVICE_PORT}
+      EVENT_WORKER_URL: http://event-worker:${EVENT_WORKER_PORT}
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000/api/v1/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      identity-service:
+        condition: service_started
+      employee-service:
+        condition: service_started
+      attendance-service:
+        condition: service_started
+      event-worker:
+        condition: service_started
+    networks: [dexa-platform]
+
+  employee-web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_APP_MODE: employee
+        VITE_API_BASE_URL: http://localhost:3000
+    ports:
+      - "3001:80"
+    networks: [dexa-platform]
+
+  hrd-web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_APP_MODE: hrd
+        VITE_API_BASE_URL: http://localhost:3000
+    ports:
+      - "3002:80"
+    networks: [dexa-platform]
+
+networks:
+  dexa-platform:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  employee_uploads:

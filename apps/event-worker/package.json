@@ -1,0 +1,23 @@
+{
+  "name": "@dexa/event-worker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test --import tsx test/**/*.test.ts"
+  },
+  "dependencies": {
+    "@dexa/contracts": "workspace:*",
+    "amqplib": "^0.10.5",
+    "pg": "^8.13.1",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.5",
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.10",
+    "@types/jsonwebtoken": "^9.0.7",
+    "tsx": "^4.19.2"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@dexa/employee-service",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test --import tsx test/**/*.test.ts",
+    "seed": "tsx src/seed.ts"
+  },
+  "dependencies": {
+    "@dexa/contracts": "workspace:*",
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1",
+    "amqplib": "^0.10.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/amqplib": "^0.10.5",
+    "@types/multer": "^2.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/pg": "^8.11.10",
+    "tsx": "^4.19.2"
+  }
+}
